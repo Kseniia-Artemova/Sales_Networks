@@ -18,12 +18,18 @@ class TradeLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
     type = models.IntegerField(choices=TYPE_CHOICES, verbose_name="Type")
 
+    def __str__(self):
+        return self.name
+
 
 class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name="Name")
     model = models.CharField(max_length=255, verbose_name="Model")
     product_launch_date = models.DateTimeField(verbose_name="Product Launch Date")
     suppliers = models.ManyToManyField(TradeLink, related_name='products', verbose_name="Suppliers")
+
+    def __str__(self):
+        return self.name
 
 
 class Contact(models.Model):
@@ -36,3 +42,6 @@ class Contact(models.Model):
                                      on_delete=models.CASCADE,
                                      related_name='contacts',
                                      verbose_name="Organization")
+
+    def __str__(self):
+        return self.email
