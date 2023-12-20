@@ -14,7 +14,7 @@ class TradeLink(models.Model):
                                  null=True,
                                  on_delete=models.SET_NULL,
                                  verbose_name="Supplier")
-    debt = models.DecimalField(default=0, blank=True, null=True, decimal_places=2, verbose_name="Debt")
+    debt = models.DecimalField(blank=True, null=True, default=0, max_digits=10, decimal_places=2, verbose_name="Debt")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
     type = models.IntegerField(choices=TYPE_CHOICES, verbose_name="Type")
 
