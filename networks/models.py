@@ -32,4 +32,7 @@ class Contact(models.Model):
     city = models.CharField(max_length=255, verbose_name="City")
     street = models.CharField(max_length=255, verbose_name="Street")
     house_number = models.CharField(max_length=20, verbose_name="House Number")
-    organization = models.ForeignKey(TradeLink, on_delete=models.CASCADE, verbose_name="Organization")
+    organization = models.ForeignKey(TradeLink,
+                                     on_delete=models.CASCADE,
+                                     related_name='contacts',
+                                     verbose_name="Organization")
