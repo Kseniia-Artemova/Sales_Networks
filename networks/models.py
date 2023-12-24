@@ -2,6 +2,10 @@ from django.db import models
 
 
 class TradeLink(models.Model):
+    """
+    Модель звена торговой цепи
+    """
+
     TYPE_CHOICES = [
         (0, 'Factory'),
         (1, 'Retail'),
@@ -23,6 +27,10 @@ class TradeLink(models.Model):
 
 
 class Product(models.Model):
+    """
+    Модель товара
+    """
+
     name = models.CharField(max_length=255, verbose_name="Name")
     model = models.CharField(max_length=255, verbose_name="Model")
     product_launch_date = models.DateTimeField(verbose_name="Product Launch Date")
@@ -33,6 +41,10 @@ class Product(models.Model):
 
 
 class Contact(models.Model):
+    """
+    Модель контактных данных
+    """
+
     email = models.EmailField(verbose_name="Email")
     country = models.CharField(max_length=255, verbose_name="Country")
     city = models.CharField(max_length=255, verbose_name="City")

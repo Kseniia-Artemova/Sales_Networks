@@ -5,6 +5,10 @@ from networks.models import TradeLink, Product, Contact
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для продукта
+    """
+
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -13,6 +17,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для контакта
+    """
+
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -21,6 +29,12 @@ class ContactSerializer(serializers.ModelSerializer):
 
 
 class TradeLinkSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для звена торговой цепи.
+
+    Позволяет в одном словаре передавать информацию также о продуктах и контактах текущего звена
+    """
+
     id = serializers.IntegerField(required=False, read_only=True)
     products = ProductSerializer(many=True, required=False)
     contacts = ContactSerializer(many=True, required=False)
@@ -30,9 +44,11 @@ class TradeLinkSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'supplier', 'debt', 'type', 'products', 'contacts']
 
     @transaction.atomic
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> TradeLink:
+
         products_data = validated_data.pop('products', [])
         contacts_data = validated_data.pop('contacts', [])
+
         tradelink = TradeLink.objects.create(**validated_data)
 
         self._handle_products(products_data, tradelink)
@@ -41,7 +57,7 @@ class TradeLinkSerializer(serializers.ModelSerializer):
         return tradelink
 
     @transaction.atomic
-    def update(self, instance, validated_data):
+    def update(self, instance: TradeLink, validated_data: dict) -> TradeLink:
 
         products_data = validated_data.pop('products', [])
         contacts_data = validated_data.pop('contacts', [])
@@ -55,7 +71,12 @@ class TradeLinkSerializer(serializers.ModelSerializer):
 
         return instance
 
-    def _handle_products(self, products_data, tradelink_instance):
+    def _handle_products(self, products_data: list, tradelink_instance: TradeLink) -> None:
+        """
+        Обработка списка продуктов
+
+        Позволяет корректно добавлять или обновлять продукты
+        """
 
         for product_data in products_data:
             product_id = product_data.get('id')
@@ -69,7 +90,13 @@ class TradeLinkSerializer(serializers.ModelSerializer):
                 new_product = Product.objects.create(**product_data)
                 new_product.suppliers.add(tradelink_instance)
 
-    def _handle_contacts(self, contacts_data, tradelink_instance):
+    def _handle_contacts(self, contacts_data: list, tradelink_instance: TradeLink) -> None:
+        """
+        Обработка списка контактов
+
+        Позволяет корректно добавлять или обновлять контакты
+        """
+
         for contact_data in contacts_data:
             contact_id = contact_data.get('id')
             if contact_id:
