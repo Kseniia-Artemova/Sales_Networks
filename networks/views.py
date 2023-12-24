@@ -8,8 +8,12 @@ from networks.serializers import TradeLinkSerializer
 
 
 class TradeLinkViewSet(ModelViewSet):
+    """
+    Набор представлений для сущности Звено торговой сети
+    """
+
     serializer_class = TradeLinkSerializer
     queryset = TradeLink.objects.all()
-    # permission_classes = [IsActive]
+    permission_classes = [IsActive]
     filter_backends = [DjangoFilterBackend]
     filterset_class = CountryFilter
